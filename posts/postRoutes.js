@@ -85,9 +85,9 @@ router.delete("/:id", (req, res) => {
 });
 
 //PUT @ /api/posts/:id
-router.put("/", (req, res) => {
+router.put("/:id", (req, res) => {
   const { id } = req.params;
-  Posts.update(req.body)
+  Posts.update(id ,req.body)
     .then((post) => {
       res.status(200).json(post);
     })
