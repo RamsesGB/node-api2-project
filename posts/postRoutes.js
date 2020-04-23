@@ -32,7 +32,7 @@ router.post("/:id/comments", (req, res) => {
 
 //GET @ /api/posts
 router.get("/", (req, res) => {
-  Posts.find()
+  Posts.find(req.query)
     .then((posts) => {
       res.status(200).json(posts);
     })
