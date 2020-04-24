@@ -9,13 +9,10 @@ router.post("/", (req, res) => {
 
   Posts.insert(createdPost)
     .then((post) => {
-      console.log(createdPost)
-      if (createdPost.title || createdPost.contents == undefined) {
-        res
-          .status(400)
-          .json({
-            errorMessage: "Please provide title and contents for the post.",
-          });
+      if (createdPost.title && createdPost.contents == undefined) {
+        res.status(400).json({
+          errorMessage: "Please provide title and contents for the post.",
+        });
       } else {
         res.status(201).json(post);
       }
@@ -29,9 +26,19 @@ router.post("/", (req, res) => {
 });
 
 router.post("/:id/comments", (req, res) => {
+  const { id } = req.params;
+  const createdComment = { ...req.body, post_id: id };
+
   Posts.insertComment(req.body)
     .then((comment) => {
+      console.log(req.body.post_id)
+      if (req.body.post_id == undefined) {
+        res
+          .status(404)
+          .json({ message: "The post with the specified ID does not exist." });
+      } else {
       res.status(201).json(comment);
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -126,8 +133,6 @@ router.put("/:id", (req, res) => {
 
   Posts.update(id, req.body)
     .then((post) => {
-      console.log(req.body);
-      console.log(postUpdate.id);
       if (postUpdate.id !== id || post == 0) {
         res
           .status(404)
